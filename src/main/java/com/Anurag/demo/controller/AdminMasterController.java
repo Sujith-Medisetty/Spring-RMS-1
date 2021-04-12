@@ -66,7 +66,7 @@ public class AdminMasterController {
 		session.setAttribute("allDetails", allDetails);
 		System.out.println("admin login Success");
 		
-		return "AdminLogin.jsp";
+		return "TellerLogin.jsp";
 		
 		}else {
 		
