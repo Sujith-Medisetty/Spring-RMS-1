@@ -29,7 +29,7 @@ public class SuperUserRepo {
 	/*--------------------------------------------------getAllDetails()-------------------------------------------------------------------*/
     
     public ArrayList<AllResponse>  getAllDetails() {
-    	List<Object[]> results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid  group by c.cid;")
+    	List<Object[]> results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid  group by c.cid;")
     			                     .getResultList();
     	
     	ArrayList<AllResponse> responses = new ArrayList<AllResponse>();
@@ -58,7 +58,7 @@ public class SuperUserRepo {
 		/*------------------------------------getDropDownTellerList()--------------------------------------------------------------------------------------*/
     
     public ArrayList<DropDownTellerList>  getDropDownTellerList() {
-    	List<Object[]> results= this.entityManager.createNativeQuery("select tid, tname, tpno from rms.teller_master ")
+    	List<Object[]> results= this.entityManager.createNativeQuery("select tid, tname, tpno from teller_master ")
     			                     .getResultList();
     	
     	ArrayList<DropDownTellerList> responses = new ArrayList<DropDownTellerList>();
@@ -77,7 +77,7 @@ public class SuperUserRepo {
     
     public ArrayList<DropDownAdminList> getDropDownAdminList() {
     	
-    	List<Object[]> results=this.entityManager.createNativeQuery("select aid, aname, apass, apno, location_lid from rms.admin_master")
+    	List<Object[]> results=this.entityManager.createNativeQuery("select aid, aname, apass, apno, location_lid from admin_master")
     			                    .getResultList();
     	
     	ArrayList<DropDownAdminList> responses=new ArrayList<DropDownAdminList>();
@@ -99,7 +99,7 @@ public class SuperUserRepo {
     
     public ArrayList<TellerAndLocationResponse> getTellerAndLocation() {
     	
-    	List<Object[]> results=this.entityManager.createNativeQuery("select t.tid,t.tname,t.tpno,l.lid,l.lname,l.lpno from rms.location_master l join rms.teller_master t where t.location_lid=l.lid")
+    	List<Object[]> results=this.entityManager.createNativeQuery("select t.tid,t.tname,t.tpno,l.lid,l.lname,l.lpno from location_master l join teller_master t where t.location_lid=l.lid")
                 .getResultList();
  
       ArrayList<TellerAndLocationResponse> responses=new ArrayList<TellerAndLocationResponse>();
@@ -123,7 +123,7 @@ public class SuperUserRepo {
    /*-----------------------------------getDropDownLocationList()--------------------------------------------------------------------------------------*/
     
     public List<String>  getDropDownLocationList() {
-    	List<String> results= this.entityManager.createNativeQuery("select lname from rms.location_master ")
+    	List<String> results= this.entityManager.createNativeQuery("select lname from location_master ")
     			                     .getResultList();
     	
     	return results;
@@ -156,7 +156,7 @@ public class SuperUserRepo {
     	
     	if(id!=null && args[0]!=null && args[1]!=null && args[2]!=null ) {
     		
-    		results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid where t.tid=? and l.lid=? and (c.date between ? and ?)  group by c.cid;")
+    		results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where t.tid=? and l.lid=? and (c.date between ? and ?)  group by c.cid;")
 	                   .setParameter(1, id)
 	                   .setParameter(2, args[0])
 	                   .setParameter(3, args[1])
@@ -165,33 +165,33 @@ public class SuperUserRepo {
     		
     	}else if(id!=null && args[0]==null && args[1]==null && args[2]==null ) {
     		
-    		results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid where t.tid=? group by c.cid;")
+    		results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where t.tid=? group by c.cid;")
 	                   .setParameter(1, id)
 	                   .getResultList();
     		
     	}else if(id==null && args[0]!=null && args[1]==null && args[2]==null ) {
     		
-       		results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid where l.lid=? group by c.cid;")
+       		results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where l.lid=? group by c.cid;")
 	                   .setParameter(1, args[0])
 	                   .getResultList();
     		
     	}else if(id==null && args[0]==null && args[1]!=null && args[2]!=null ) {
     		
-    		results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid where (c.date between ? and ?)  group by c.cid;")
+    		results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where (c.date between ? and ?)  group by c.cid;")
 	                   .setParameter(1, args[1])
 	                   .setParameter(2, args[2])
 	                   .getResultList();
     		
     	}else if(id!=null && args[0]!=null && args[1]==null && args[2]==null) {
     		
-    		results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid where t.tid=? and l.lid=? group by c.cid;")
+    		results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where t.tid=? and l.lid=? group by c.cid;")
 	                   .setParameter(1, id)
 	                   .setParameter(2, args[0])
 	                   .getResultList();
     		
     	}else if(id!=null && args[0]==null && args[1]!=null && args[2]!=null) {
     		
-    		results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid where t.tid=? and (c.date between ? and ?)  group by c.cid;")
+    		results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where t.tid=? and (c.date between ? and ?)  group by c.cid;")
 	                   .setParameter(1, id)
 	                   .setParameter(2, args[1])
 	                   .setParameter(3, args[2])
@@ -199,7 +199,7 @@ public class SuperUserRepo {
     		
     	}else if(id==null && args[0]!=null && args[1]!=null && args[2]!=null){
     		
-    		results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid where l.lid=? and (c.date between ? and ?)  group by c.cid;")
+    		results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where l.lid=? and (c.date between ? and ?)  group by c.cid;")
 	                   .setParameter(1, args[0])
 	                   .setParameter(2, args[1])
 	                   .setParameter(3, args[2])
@@ -207,7 +207,7 @@ public class SuperUserRepo {
     		
     	}else {
     		
-    		results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid  group by c.cid;")
+    		results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid  group by c.cid;")
 	                   .getResultList();
     		
     	}
@@ -245,7 +245,7 @@ public class SuperUserRepo {
     	
     	if(id!=null && args[0]!=null && args[1]!=null && args[2]!=null ) {
     		
-    		results= this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid where l.lid=?  and (c.date between ? and ?) and tid=? group by c.cid) as derived group by tid;")
+    		results= this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where l.lid=?  and (c.date between ? and ?) and tid=? group by c.cid) as derived group by tid;")
 	                   .setParameter(1, args[0])
 	                   .setParameter(2, args[1])
 	                   .setParameter(3, args[2])
@@ -254,33 +254,33 @@ public class SuperUserRepo {
     		
     	}else if(id!=null && args[0]==null && args[1]==null && args[2]==null ) {
     		
-    		results= this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid where  tid=? group by c.cid) as derived group by tid;")
+    		results= this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where  tid=? group by c.cid) as derived group by tid;")
 	                   .setParameter(1, id)
 	                   .getResultList();
     		
     	}else if(id==null && args[0]!=null && args[1]==null && args[2]==null ) {
     		
-       		results= this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid where l.lid=? group by c.cid) as derived group by tid;")
+       		results= this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where l.lid=? group by c.cid) as derived group by tid;")
 	                   .setParameter(1, args[0])
 	                   .getResultList();
     		
     	}else if(id==null && args[0]==null && args[1]!=null && args[2]!=null ) {
     		
-    		results= this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid where (c.date between ? and ?) group by c.cid) as derived group by tid;")
+    		results= this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where (c.date between ? and ?) group by c.cid) as derived group by tid;")
 	                   .setParameter(1, args[1])
 	                   .setParameter(2, args[2])
 	                   .getResultList();
     		
     	}else if(id!=null && args[0]!=null && args[1]==null && args[2]==null) {
     		
-    		results= this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid where l.lid=?  and  tid=? group by c.cid) as derived group by tid;")
+    		results= this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where l.lid=?  and  tid=? group by c.cid) as derived group by tid;")
 	                   .setParameter(1, args[0])
 	                   .setParameter(2, id)
 	                   .getResultList();
     		
     	}else if(id!=null && args[0]==null && args[1]!=null && args[2]!=null) {
     		
-    		results= this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid where (c.date between ? and ?) and tid=? group by c.cid) as derived group by tid;")
+    		results= this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where (c.date between ? and ?) and tid=? group by c.cid) as derived group by tid;")
 	                   .setParameter(1, args[1])
 	                   .setParameter(2, args[2])
 	                   .setParameter(3, id)
@@ -288,7 +288,7 @@ public class SuperUserRepo {
     		
     	}else if(id==null && args[0]!=null && args[1]!=null && args[2]!=null){
     		
-    		results= this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid where l.lid=?  and (c.date between ? and ?)  group by c.cid) as derived group by tid;")
+    		results= this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where l.lid=?  and (c.date between ? and ?)  group by c.cid) as derived group by tid;")
 	                   .setParameter(1, args[0])
 	                   .setParameter(2, args[1])
 	                   .setParameter(3, args[2])
@@ -296,7 +296,7 @@ public class SuperUserRepo {
     		
     	}else {
     		
-    		results= this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid  group by c.cid) as derived group by tid;")
+    		results= this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid  group by c.cid) as derived group by tid;")
 	                   .getResultList();
     		
     	}
@@ -318,7 +318,7 @@ public class SuperUserRepo {
     
     public ArrayList<AdminAnalysisDetails>  getSuperUserTellerCompleteAnalysis() {
     	
-    	List<Object[]> results=this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid  group by c.cid) as derived group by tid;")
+    	List<Object[]> results=this.entityManager.createNativeQuery("select tid, tname, tpno, convert(count(customers),char) as customers, convert(round(sum(totalamount)),char) as amount from  (select  t.tid, count(c.cid) as customers, t.tname, t.tpno,((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)) as totalamount, l.lname, l.lpno, c.date from  customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid  group by c.cid) as derived group by tid;")
                 .getResultList();
 	ArrayList<AdminAnalysisDetails> responses = new ArrayList<AdminAnalysisDetails>();
     	
@@ -338,7 +338,7 @@ public class SuperUserRepo {
 		/*----------------------------------------getId()--------------------------------------------------------------------------------*/
     
     public ArrayList<AllResponse>  getId(String id) {
-    	List<Object[]> results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid where t.tid=? group by c.cid;")
+    	List<Object[]> results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where t.tid=? group by c.cid;")
     			                   .setParameter(1, id)
     			                   .getResultList();
     	
@@ -369,7 +369,7 @@ public class SuperUserRepo {
 		/*----------------------------------------getLocation()-----------------------------------------------------------------*/
     
     public ArrayList<AllResponse>  getLocation(String lid) {
-    	List<Object[]> results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid where l.lid=? group by c.cid;")
+    	List<Object[]> results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where l.lid=? group by c.cid;")
     			                   .setParameter(1, lid)
     			                   .getResultList();
     	
@@ -436,7 +436,7 @@ public class SuperUserRepo {
     
     public ArrayList<TellerAnalysis> getSuperUserTellerAnalysis() {
       
-    	List<Object[]> results=entityManager.createNativeQuery("select c.date, cid, c.cname,  h.job_jobid, j.jobname, convert(round(j.jobprice-(h.discount*j.jobprice)/100),char) as amount, l.lname from rms.customer_master c inner join rms.history_master h on c.cid=h.customer_cid  inner join rms.job_price j on h.job_jobid=j.jobid inner join rms.teller_master t on t.tid=c.teller_tid inner join rms.location_master l on l.lid=t.location_lid order by c.date")
+    	List<Object[]> results=entityManager.createNativeQuery("select c.date, cid, c.cname,  h.job_jobid, j.jobname, convert(round(j.jobprice-(h.discount*j.jobprice)/100),char) as amount, l.lname from customer_master c inner join history_master h on c.cid=h.customer_cid  inner join job_price j on h.job_jobid=j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid order by c.date")
     	                                .getResultList();
     	
           ArrayList<TellerAnalysis> responses = new ArrayList<TellerAnalysis>();
@@ -459,7 +459,7 @@ public class SuperUserRepo {
     public String getTotalCustomers() {
     	
 		  
-		  Query query= entityManager.createNativeQuery("select CONVERT(count(distinct(c.cid)), CHAR) from rms.customer_master c inner join rms.history_master h on c.cid=h.customer_cid  inner join rms.job_price j on h.job_jobid=j.jobid");
+		  Query query= entityManager.createNativeQuery("select CONVERT(count(distinct(c.cid)), CHAR) from customer_master c inner join history_master h on c.cid=h.customer_cid  inner join job_price j on h.job_jobid=j.jobid");
 		 
 		 String result=(String) query.getResultList().get(0);		  
 		  return result;
@@ -468,7 +468,7 @@ public class SuperUserRepo {
     
     public String getTotalMoneyEarned() {
     	
-		  Query query= entityManager.createNativeQuery("select convert(round(sum(j.jobprice-(h.discount*j.jobprice)/100)),char) as amount from rms.customer_master c inner join rms.history_master h on c.cid=h.customer_cid  inner join rms.job_price j on h.job_jobid=j.jobid");
+		  Query query= entityManager.createNativeQuery("select convert(round(sum(j.jobprice-(h.discount*j.jobprice)/100)),char) as amount from customer_master c inner join history_master h on c.cid=h.customer_cid  inner join job_price j on h.job_jobid=j.jobid");
 			 
 		 String result=(String) query.getResultList().get(0);		  
 		  return result;
@@ -477,7 +477,7 @@ public class SuperUserRepo {
     
     public ArrayList<SuperUserDetails> getSuperUserDetails() {
         
-    	List<Object[]> results=entityManager.createNativeQuery("select sid,sname,spno,spass from rms.super_user")
+    	List<Object[]> results=entityManager.createNativeQuery("select sid,sname,spno,spass from super_user")
     	                                .getResultList();
     	
           ArrayList<SuperUserDetails> responses = new ArrayList<SuperUserDetails>();

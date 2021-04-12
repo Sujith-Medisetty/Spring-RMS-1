@@ -95,7 +95,7 @@ public class TellerMasterRepo {
 			/*------------------------------------------------------------------------------------------*/
 			
 		     public ArrayList<Teller2Response>  getTeller2(String date1,String date2) {
-		     	List<Object[]> results= this.entityManager.createNativeQuery("select c.cid, c.cname, c.cpno , GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, c.date from rms.customer_master c inner join rms.history_master h on c.cid = h.customer_cid inner join rms.job_price j on h.job_jobid = j.jobid  where c.date between ? and  ? group by c.cid;")
+		     	List<Object[]> results= this.entityManager.createNativeQuery("select c.cid, c.cname, c.cpno , GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, c.date from customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid  where c.date between ? and  ? group by c.cid;")
 		     			                     .setParameter(1,date1)
 		     			                     .setParameter(2, date2)   
 		     			                     .getResultList();
