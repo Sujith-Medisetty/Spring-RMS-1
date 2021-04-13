@@ -49,14 +49,13 @@ public class AdminMasterController {
 	
 	@RequestMapping("/AdminLogin")
 	public String AdminLogin(@RequestParam String aid, @RequestParam String apass, HttpSession session) {
-		
-		if(dao.findByAdminMaster(aid, apass)>0) {
-		
-		this.aaid=aid;
-			
-		
-		
 		/*
+		 * if(dao.findByAdminMaster(aid, apass)>0) {
+		 * 
+		 * this.aaid=aid;
+		 * 
+		 * 
+		 * 
 		 * session.setAttribute("repo", repo);
 		 * this.admins=repo.getDropDownAdminList(aid);
 		 * this.allDetails=repo.getAllDetails(admins.get(0).getLocation_lid());
@@ -65,16 +64,17 @@ public class AdminMasterController {
 		 * session.setAttribute("aid", aid);
 		 * System.out.println("details are "+aid+" and "+admins.get(0).getLocation_lid()
 		 * ); session.setAttribute("allDetails", allDetails);
+		 * System.out.println("admin login Success");
 		 * 
+		 * return "AdminLogin.jsp";
+		 * 
+		 * }else {
+		 * 
+		 * return "redirect:Login.jsp";
+		 * 
+		 * }
 		 */
-		System.out.println("admin login Success");
 		return "Login.jsp";
-		
-		}else {
-		
-			return "redirect:Login.jsp";
-			
-		}
 		
 	}
 	
