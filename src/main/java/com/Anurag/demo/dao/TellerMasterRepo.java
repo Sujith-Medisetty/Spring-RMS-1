@@ -94,29 +94,31 @@ public class TellerMasterRepo {
 		  
 			/*------------------------------------------------------------------------------------------*/
 			
-		     public ArrayList<Teller2Response>  getTeller2(String date1,String date2) {
-		     	List<Object[]> results= this.entityManager.createNativeQuery("select c.cid, c.cname, c.cpno , GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, c.date from customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid  where c.date between ? and  ? group by c.cid;")
-		     			                     .setParameter(1,date1)
-		     			                     .setParameter(2, date2)   
-		     			                     .getResultList();
-		     	
-		     	ArrayList<Teller2Response> responses = new ArrayList<Teller2Response>();
-		     	
-		     	results.stream().forEach((record)->{
-		     		int cid=(int)record[0];
-		     		String cname=(String)record[1];
-		     		String cpno=(String)record[2];
-		     		String jobname=(String)record[3];
-		     		String jobprice=(String)record[4];
-		     		String discount=(String)record[5];
-		     		String gst=(String)record[6];
-		     		String amount=(String)record[7];
-		     		Date date=(Date)record[8];
-		     		responses.add(new Teller2Response(cid,cname,cpno,jobname,jobprice,discount,gst,amount,date));
-		     	});
-		     	
-		     	return responses;
-		      }
+			public ArrayList<Teller2Response> getTeller2(String date1, String date2) {
+				System.out.println("first");
+				List<Object[]> results = this.entityManager.createNativeQuery(
+						"select c.cid, cast(array_to_string(array_agg(distinct c.cname),',') as varchar) cname, cast(array_to_string(array_agg(distinct c.cpno),',') as varchar) cpno ,array_to_string(array_agg( j.jobname),',') jobname,cast(sum(j.jobprice) as varchar) jobprice,cast(array_to_string(array_agg(distinct h.discount),',') as varchar) discount,cast(array_to_string(array_agg(distinct h.gst),',') as varchar) gst, cast(round((sum(j.jobprice)-((sum(j.jobprice)*cast(array_to_string(array_agg(distinct h.discount),',') as integer))/100))+(((sum(j.jobprice)-((sum(j.jobprice)*cast(array_to_string(array_agg(distinct h.discount),',') as integer))/100))*cast(array_to_string(array_agg(distinct h.gst),',') as integer))/100)) as varchar) as amount, cast(array_to_string(array_agg(distinct c.date),',') as date) date from customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid  where c.date between ? and  ? group by c.cid;")
+						.setParameter(1, java.sql.Date.valueOf(date1)).setParameter(2, java.sql.Date.valueOf(date2)).getResultList();
+				System.out.println(results);
+				
+				  ArrayList<Teller2Response> responses = new ArrayList<Teller2Response>();
+				  
+				  results.stream().forEach((record)->{ 
+				int cid=(int)record[0]; 
+				String cname=(String)record[1];
+				String cpno=(String)record[2];
+				String jobname=(String)record[3]; 
+				String jobprice=(String)record[4];
+				String discount=(String)record[5]; 
+				String gst=(String)record[6];
+				String amount=(String)record[7]; 
+				Date date=(Date)record[8];
+				responses.add(new Teller2Response(cid,cname,cpno,jobname,jobprice,discount,gst,amount,date));
+				  });
+				  System.out.println("second");
+				 
+				return responses;
+			}
 		     
 		     public ArrayList<TellerDetails> getTellerDetails(String tid) {
 		    	 
