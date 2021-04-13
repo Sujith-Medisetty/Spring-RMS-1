@@ -46,6 +46,7 @@
 		 -->
 		<!-- https://mvnrepository.com/artifact/org.jumpmind.symmetric.jdbc/postgresql -->
 
+
 	 <dependency>
 		    <groupId>org.postgresql</groupId>
 		    <artifactId>postgresql</artifactId>

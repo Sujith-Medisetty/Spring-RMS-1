@@ -29,7 +29,7 @@ public class SuperUserRepo {
 	/*--------------------------------------------------getAllDetails()-------------------------------------------------------------------*/
     
     public ArrayList<AllResponse>  getAllDetails() {
-    	List<Object[]> results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  GROUP_CONCAT(j.jobname) jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid  group by c.cid;")
+    	List<Object[]> results= this.entityManager.createNativeQuery("select t.tid, t.tname, t.tpno, c.cid, c.cname, c.cpno ,  array_to_string(array_agg(j.jobname), ',') jobname,convert(sum(j.jobprice),char) as jobprice ,convert(h.discount,char) discount,convert(h.gst,char) gst, convert(round((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))+(((sum(j.jobprice)-((sum(j.jobprice)*discount)/100))*gst)/100)),char) as amount, l.lname, l.lpno, c.date from customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid  group by c.cid;")
     			                     .getResultList();
     	
     	ArrayList<AllResponse> responses = new ArrayList<AllResponse>();
