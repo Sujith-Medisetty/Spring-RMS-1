@@ -74,10 +74,10 @@ margin:3px;
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 
-<!-- <SCRIPT type="text/javascript">
+<SCRIPT type="text/javascript">
 	window.history.forward();
 	function noBack() { window.history.forward(); }
-</SCRIPT> -->
+</SCRIPT>
 </head>
 <body>
 
