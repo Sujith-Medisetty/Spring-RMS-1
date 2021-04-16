@@ -69,12 +69,12 @@ background-color: silver;
 
 </head>
 <body>
-<%
+<%-- <%
 response.setHeader("Cache-Control","no-store");
 response.setHeader("Pragma","no-cache");
 response.setHeader ("Expires", "0"); //prevents caching at the proxy server
 
-%>
+%> --%>
 
 <div class="one" id="printthis">
 
