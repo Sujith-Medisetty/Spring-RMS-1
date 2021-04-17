@@ -1,7 +1,9 @@
 package com.Anurag.demo.controller;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,9 +11,11 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.swing.filechooser.FileSystemView;
 
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -208,107 +212,32 @@ public class TellerMasterController {
 	}
 	
 	
-	
 	@RequestMapping("/TellerReportExcel")
-	public String TellerReportExcel() {
+	public void TellerReportExcel(HttpServletResponse response) throws IOException {
+	
 		
 		
-		//--------------------------------------------------
 		
-		   DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		   LocalDateTime now = LocalDateTime.now();
-		   String appendingDate=dtf.format(now);
-		   System.out.println();		
+		  //--------------------------------------------------
+		  
+		  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		  LocalDateTime now = LocalDateTime.now(); String
+		  appendingDate=dtf.format(now); System.out.println();
+		  
+		  
+		  //---------------------------------------------------
+
+        String stri=GlobalTellerAndLocationDetails.getTname()+" Report "+appendingDate+
+		  ".xlsx"; System.out.println(stri);
+		 
+
 		
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition","attachment; filename="+stri);
 		
-		//---------------------------------------------------
+		ByteArrayInputStream inputstream= com.Anurag.demo.exporter.TellerReportExcel.exportCustomerListToExcelFile(TellerReportExcel);
 		
-		File home = FileSystemView.getFileSystemView().getHomeDirectory();
-		String path=home.getAbsolutePath();
-		String[] list1=path.replaceAll(Pattern.quote("\\"),"\\\\").split("\\\\");
-		String stri="";
-		for(String i :list1) {
-			stri=stri+i+"/";
-		}
-		stri=stri+GlobalTellerAndLocationDetails.getTname()+" Report "+appendingDate+".xlsx";
-		System.out.println(stri);
-		
-		
-		try {
-			
-			//create an .xlsx format workbook
-			Workbook workbook=new XSSFWorkbook();
-			
-			//create a new sheet in workbook
-			Sheet sh=workbook.createSheet("ExcelTellerReport");
-			
-			//create top row with column headings
-			String[] columnHeaders= {"Customer Id","Customer Name","Customer Phno","JobName","JobPrice","Discount","GST","Amount","Date"};
-			
-			//want to make header bold with foreground color
-			Font headerFont=workbook.createFont();
-			headerFont.setBold(true);
-			headerFont.setFontHeightInPoints((short)12);
-			headerFont.setColor(IndexedColors.BLACK.index);
-			
-			
-			//create a cellstyle with a font
-			CellStyle headerStyle=workbook.createCellStyle();
-			headerStyle.setFont(headerFont);
-			headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-			headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.index);
-			
-			//create a row
-			Row headerRow=sh.createRow(0);
-			
-			//iterate over the column headings to crate columns
-			for(int i=0;i<columnHeaders.length;i++) {
-				Cell cell=headerRow.createCell(i);
-				cell.setCellValue(columnHeaders[i]);
-				cell.setCellStyle(headerStyle);
-			}
-			
-			//get data and fill the data 
-			ArrayList<Teller2Response> a=TellerReportExcel;
-			System.out.println(a);
-			int rownum=1;
-			for(Teller2Response i:a) {
-				Row row=sh.createRow(rownum++);
-				row.createCell(0).setCellValue(i.getCid());
-				row.createCell(1).setCellValue(i.getCname());
-				row.createCell(2).setCellValue(i.getCpno());
-				row.createCell(3).setCellValue(i.getJobname());
-				row.createCell(4).setCellValue(i.getJobprice());
-				row.createCell(5).setCellValue(i.getDiscount());
-				row.createCell(6).setCellValue(i.getGst());
-				row.createCell(7).setCellValue(i.getAmount());
-								
-				String[] temp=i.getDate().toString().split("-");
-				String final1=temp[2]+"-"+temp[1]+"-"+temp[0];
-				row.createCell(8).setCellValue(final1);
-				
-			}
-			
-			for(int i=0;i<columnHeaders.length;i++) {
-				sh.autoSizeColumn(i);
-			}
-			Sheet sh2=workbook.createSheet("second");
-			//write output to the file
-			FileOutputStream fileout=new FileOutputStream(stri);
-			workbook.write(fileout);
-			fileout.close();
-			workbook.close();
-			System.out.println("completed");
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		
-		//------------------------------------------------------
-		
-		return "TellerReport.jsp";
-		
+		IOUtils.copy(inputstream, response.getOutputStream());
 	}
 	
 }
