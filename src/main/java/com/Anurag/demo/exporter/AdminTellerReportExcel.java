@@ -1,6 +1,8 @@
 package com.Anurag.demo.exporter;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -15,13 +17,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.Anurag.demo.dto.AllResponse;
 
-public class ExcelFileExporter {
-	
-	public static ByteArrayInputStream exportCustomerListToExcelFile(ArrayList<AllResponse> response) {
+public class AdminTellerReportExcel {
+
+	public static ByteArrayInputStream exportCustomerListToExcelFile(ArrayList<AllResponse> complete1) {
 		
-		
-		
-		try {
+	try {
 			
 			//create an .xlsx format workbook
 			Workbook workbook=new XSSFWorkbook();
@@ -56,7 +56,7 @@ public class ExcelFileExporter {
 			}
 			
 			//get data and fill the data 
-			ArrayList<AllResponse> a=response;
+			ArrayList<AllResponse> a=complete1;
 			System.out.println(a);
 			int rownum=1;
 			for(AllResponse i:a) {
@@ -84,29 +84,17 @@ public class ExcelFileExporter {
 			for(int i=0;i<columnHeaders.length;i++) {
 				sh.autoSizeColumn(i);
 			}
-			
+
 			ByteArrayOutputStream outputstream = new ByteArrayOutputStream();
 			workbook.write(outputstream);
 			return new ByteArrayInputStream(outputstream.toByteArray());
-			
-			/*
-			 * Sheet sh2=workbook.createSheet("second"); //write output to the file
-			 * FileOutputStream fileout=new FileOutputStream(stri); workbook.write(fileout);
-			 * fileout.close(); workbook.close();
-			 */
-			
 			
 		}catch(Exception e) {
 			e.printStackTrace();
 			return null;
 		}
-	
 		
-		
-		
-		
-	
 		
 	}
-
+	
 }

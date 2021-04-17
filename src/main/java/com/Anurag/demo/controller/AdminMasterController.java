@@ -1,28 +1,15 @@
 package com.Anurag.demo.controller;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.compress.utils.IOUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +20,8 @@ import com.Anurag.demo.dao.AdminMasterRepo;
 import com.Anurag.demo.dto.AdminAnalysisDetails;
 import com.Anurag.demo.dto.AllResponse;
 import com.Anurag.demo.dto.DropDownAdminList;
-import com.Anurag.demo.exporter.ExcelFileExporter;
+import com.Anurag.demo.exporter.AdminCompleteReportExcel;
+import com.Anurag.demo.exporter.AdminTellerReportExcel;
 
 @Controller
 public class AdminMasterController {
@@ -168,7 +156,7 @@ public class AdminMasterController {
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-Disposition","attachment; filename=first.xlsx");
 		
-		ByteArrayInputStream inputstream= ExcelFileExporter.exportCustomerListToExcelFile(allDetails);
+		ByteArrayInputStream inputstream = AdminCompleteReportExcel.exportCustomerListToExcelFile(allDetails);
 		
 		IOUtils.copy(inputstream, response.getOutputStream());
 		
@@ -214,111 +202,25 @@ public class AdminMasterController {
 	
 	
 	@RequestMapping("/AdminTellerReportExcel")
-	public String AdminTellerReportExcel() {
+	public void AdminTellerReportExcel(HttpServletResponse response) throws IOException {
 		
-		
-		//--------------------------------------------------
 		
 		   DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		   LocalDateTime now = LocalDateTime.now();
 		   String appendingDate=dtf.format(now);
-		   System.out.println();		
+		   System.out.println();
+		   
+	        String stri=admins.get(0).getAname()+" Report "+appendingDate+".xlsx";
+			System.out.println(stri);
 		
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition","attachment; filename="+stri);
 		
+		ByteArrayInputStream inputstream= AdminTellerReportExcel.exportCustomerListToExcelFile(complete1);
 		
-		//---------------------------------------------------
+		IOUtils.copy(inputstream, response.getOutputStream());
 		
-		File home = FileSystemView.getFileSystemView().getHomeDirectory();
-		String path=home.getAbsolutePath();
-		String[] list1=path.replaceAll(Pattern.quote("\\"),"\\\\").split("\\\\");
-		String stri="";
-		for(String i :list1) {
-			stri=stri+i+"/";
-		}
-		stri=stri+admins.get(0).getAname()+" Report "+appendingDate+".xlsx";
-		System.out.println(stri);
-		
-		
-		try {
-			
-			//create an .xlsx format workbook
-			Workbook workbook=new XSSFWorkbook();
-			
-			//create a new sheet in workbook
-			Sheet sh=workbook.createSheet("Invoices");
-			
-			//create top row with column headings
-			String[] columnHeaders= {"Teller Id","Teller Name","Teller Phno","Customer Id","Customer Name","Customer Phno","JobName","JobPrice","Discount","GST","Amount","Location Name","Location Phno","Date"};
-			
-			//want to make header bold with foreground color
-			Font headerFont=workbook.createFont();
-			headerFont.setBold(true);
-			headerFont.setFontHeightInPoints((short)12);
-			headerFont.setColor(IndexedColors.BLACK.index);
-			
-			
-			//create a cellstyle with a font
-			CellStyle headerStyle=workbook.createCellStyle();
-			headerStyle.setFont(headerFont);
-			headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-			headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.index);
-			
-			//create a row
-			Row headerRow=sh.createRow(0);
-			
-			//iterate over the column headings to crate columns
-			for(int i=0;i<columnHeaders.length;i++) {
-				Cell cell=headerRow.createCell(i);
-				cell.setCellValue(columnHeaders[i]);
-				cell.setCellStyle(headerStyle);
-			}
-			
-			//get data and fill the data 
-			ArrayList<AllResponse> a=complete1;
-			System.out.println(a);
-			int rownum=1;
-			for(AllResponse i:a) {
-				Row row=sh.createRow(rownum++);
-				row.createCell(0).setCellValue(i.getTid());
-				row.createCell(1).setCellValue(i.getTname());
-				row.createCell(2).setCellValue(i.getTpno());
-				row.createCell(3).setCellValue(i.getCid());
-				row.createCell(4).setCellValue(i.getCname());
-				row.createCell(5).setCellValue(i.getCpno());
-				row.createCell(6).setCellValue(i.getJobname());
-				row.createCell(7).setCellValue(i.getJobprice());
-				row.createCell(8).setCellValue(i.getDiscount());
-				row.createCell(9).setCellValue(i.getGst());
-				row.createCell(10).setCellValue(i.getAmount());
-				row.createCell(11).setCellValue(i.getLname());
-				row.createCell(12).setCellValue(i.getLpno());
-				
-				String[] temp=i.getDate().toString().split("-");
-				String final1=temp[2]+"-"+temp[1]+"-"+temp[0];
-				row.createCell(13).setCellValue(final1);
-				
-			}
-			
-			for(int i=0;i<columnHeaders.length;i++) {
-				sh.autoSizeColumn(i);
-			}
-			Sheet sh2=workbook.createSheet("second");
-			//write output to the file
-			FileOutputStream fileout=new FileOutputStream(stri);
-			workbook.write(fileout);
-			fileout.close();
-			workbook.close();
-			System.out.println("completed");
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		
-		//------------------------------------------------------
-		
-		
-		return "AdminTellerReport.jsp";
+
 	}
 	
 }
