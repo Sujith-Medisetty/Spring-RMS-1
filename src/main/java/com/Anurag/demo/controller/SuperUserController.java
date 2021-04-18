@@ -1,7 +1,11 @@
 package com.Anurag.demo.controller;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -10,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.swing.filechooser.FileSystemView;
 
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -31,6 +36,10 @@ import com.Anurag.demo.dto.AdminAnalysisDetails;
 import com.Anurag.demo.dto.AllResponse;
 import com.Anurag.demo.dto.DropDownTellerList;
 import com.Anurag.demo.dto.LocationResponse;
+import com.Anurag.demo.exporter.SuperUserTellerAnalysisExcel;
+import com.Anurag.demo.exporter.SuperUserTellerReportExcel;
+import com.Anurag.demo.exporter.superuserTellerCompleteAnalysisExcel;
+import com.Anurag.demo.exporter.superuserTellerCompleteReportExcel;
 
 
 @Controller
@@ -42,6 +51,10 @@ public class SuperUserController {
 	ArrayList<DropDownTellerList> responses2;
 	List<String> responses3;
 	ArrayList<LocationResponse> responses4;
+	
+	ArrayList<AllResponse> completeData1;
+	ArrayList<AdminAnalysisDetails> summary1;
+	ArrayList<AdminAnalysisDetails> analysisDetails1;
 
 	@Autowired
 	SuperUserDao dao;
@@ -181,6 +194,7 @@ public class SuperUserController {
 		ArrayList<AllResponse> completeData = repo.getIdAndLocation(tellerid,location,date1,date2);
 		session.setAttribute("completeData", completeData);
 		System.out.println(completeData);
+		completeData1=completeData;
 		
 		session.setAttribute("sid", sid);
 		session.setAttribute("spass",spass);
@@ -238,6 +252,7 @@ public class SuperUserController {
 
 		ArrayList<AdminAnalysisDetails> summary=repo.getSuperUserTellerAnalysis(tellerid, location,date1,date2);
 		session.setAttribute("summary", summary);
+		summary1=summary;
 		return "superUserAnalysis.jsp";
 	}
 	
@@ -268,7 +283,90 @@ public class SuperUserController {
 		
 		ArrayList<AdminAnalysisDetails> analysisDetails=repo.getSuperUserTellerCompleteAnalysis();
 		session.setAttribute("analysisDetails", analysisDetails);
+		analysisDetails1=analysisDetails;
 		return "superuserTellerCompleteAnalysis.jsp";
 	}
+	
+	
+	@RequestMapping("SuperUserTellerReportExcel")
+	public void SuperUserTellerReportExcel(HttpServletResponse response) throws IOException {
+		
+		   DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		   LocalDateTime now = LocalDateTime.now();
+		   String appendingDate=dtf.format(now);
+		   System.out.println();
+		
+        String stri=sid+" Report"+appendingDate+".xlsx";
+		System.out.println(stri);
+	
+	response.setContentType("application/octet-stream");
+	response.setHeader("Content-Disposition","attachment; filename="+stri);
+	
+	ByteArrayInputStream inputstream= SuperUserTellerReportExcel.exportCustomerListToExcelFile(completeData1);
+	
+	IOUtils.copy(inputstream, response.getOutputStream());
+		
+	}
+	
+	@RequestMapping("superuserTellerCompleteReportExcel")
+	public void SuperUserTellerCompleteReportExcel(HttpServletResponse response) throws IOException {
+		
+		   DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		   LocalDateTime now = LocalDateTime.now();
+		   String appendingDate=dtf.format(now);
+		   System.out.println();
+		
+        String stri=sid+" Report"+appendingDate+".xlsx";
+		System.out.println(stri);
+	
+	response.setContentType("application/octet-stream");
+	response.setHeader("Content-Disposition","attachment; filename="+stri);
+	
+	ByteArrayInputStream inputstream= superuserTellerCompleteReportExcel.exportCustomerListToExcelFile(responses);
+	
+	IOUtils.copy(inputstream, response.getOutputStream());
+		
+	}
+	
+	@RequestMapping("SuperUserTellerAnalysisExcel")
+	public void SuperUserTellerAnalysisExcel(HttpServletResponse response) throws IOException {
+		
+		   DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		   LocalDateTime now = LocalDateTime.now();
+		   String appendingDate=dtf.format(now);
+		   System.out.println();
+		
+        String stri=sid+" Report"+appendingDate+".xlsx";
+		System.out.println(stri);
+	
+	response.setContentType("application/octet-stream");
+	response.setHeader("Content-Disposition","attachment; filename="+stri);
+	
+	ByteArrayInputStream inputstream= SuperUserTellerAnalysisExcel.exportCustomerListToExcelFile(summary1);
+	
+	IOUtils.copy(inputstream, response.getOutputStream());
+		
+	}
+	
+	@RequestMapping("superuserTellerCompleteAnalysisExcel")
+	public void superuserTellerCompleteAnalysisExcel(HttpServletResponse response) throws IOException {
+		
+		   DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		   LocalDateTime now = LocalDateTime.now();
+		   String appendingDate=dtf.format(now);
+		   System.out.println();
+		
+        String stri=sid+" Report"+appendingDate+".xlsx";
+		System.out.println(stri);
+	
+	response.setContentType("application/octet-stream");
+	response.setHeader("Content-Disposition","attachment; filename="+stri);
+	
+	ByteArrayInputStream inputstream= superuserTellerCompleteAnalysisExcel.exportCustomerListToExcelFile(analysisDetails1);
+	
+	IOUtils.copy(inputstream, response.getOutputStream());
+		
+	}
+	
 	
 }
