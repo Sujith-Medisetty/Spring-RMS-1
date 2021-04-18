@@ -80,7 +80,6 @@ box-shadow: 5px 5px 25px lightgrey;
  </div>        
         
               <div class="row g-3 justify-content-center">
-  <div class="col-md-3"></div>
  <div class="col-md-3">
  
        <form action="AdminLoginBack">
