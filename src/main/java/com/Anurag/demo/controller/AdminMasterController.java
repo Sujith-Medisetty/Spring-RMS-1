@@ -20,8 +20,11 @@ import com.Anurag.demo.dao.AdminMasterRepo;
 import com.Anurag.demo.dto.AdminAnalysisDetails;
 import com.Anurag.demo.dto.AllResponse;
 import com.Anurag.demo.dto.DropDownAdminList;
+import com.Anurag.demo.dto.TellerPerformance;
 import com.Anurag.demo.exporter.AdminCompleteReportExcel;
 import com.Anurag.demo.exporter.AdminTellerReportExcel;
+import com.Anurag.demo.exporter.showDetails2Excel;
+import com.Anurag.demo.exporter.showDetailsExcel;
 
 @Controller
 public class AdminMasterController {
@@ -29,6 +32,8 @@ public class AdminMasterController {
 	ArrayList<DropDownAdminList> admins;
 	ArrayList<AllResponse> allDetails;
 	ArrayList<AllResponse>  complete1;
+	ArrayList<AdminAnalysisDetails> showDetails1;
+	ArrayList<TellerPerformance> showDetails2;
 	String aaid;
 	
 	@Autowired
@@ -51,6 +56,7 @@ public class AdminMasterController {
 		session.setAttribute("repo", repo);
 		this.admins=repo.getDropDownAdminList(aid);
 		this.allDetails=repo.getAllDetails(admins.get(0).getLocation_lid());
+		session.setAttribute("location", admins.get(0).getLocation_lid());
 		
 		session.setAttribute("location_lid",admins.get(0).getLocation_lid());
 		session.setAttribute("aid", aid);
@@ -128,7 +134,7 @@ public class AdminMasterController {
 			details=repo.getAdminAnalysisDetails1(lid, date1, date2);
 			
 		}
-		
+		showDetails1=details;
 		session.setAttribute("details", details);
 		
 		return "showDetails.jsp";
@@ -138,6 +144,8 @@ public class AdminMasterController {
 	public String showDetails2(HttpSession session) {
 		session.setAttribute("repo", repo);
 		session.setAttribute("lid",admins.get(0).getLocation_lid());
+		  ArrayList<TellerPerformance> pricelist1=repo.getTellersPerformance(admins.get(0).getLocation_lid());
+		  showDetails2=pricelist1;
 		return "showDetails2.jsp";
 	}
 	
@@ -153,39 +161,34 @@ public class AdminMasterController {
 	@RequestMapping("/ExcelAdminCompleteReport")
 	public void ExcelAdminCompleteReport(HttpServletResponse response) throws IOException {
 		
+		
+		  //--------------------------------------------------
+		  
+		  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy--HH:mm:ss");
+		  LocalDateTime now = LocalDateTime.now(); String
+		  appendingDate=dtf.format(now); System.out.println();
+		  
+		  
+		  
+		  //---------------------------------------------------
+
+		  String stri=admins.get(0).getAname()+" Complete Report "+appendingDate+".xlsx";
+		  System.out.println(stri);
+		  
+		  
+		  
+		  //------------------------------------------------------
+		 
+		
+		
 		response.setContentType("application/octet-stream");
-		response.setHeader("Content-Disposition","attachment; filename=first.xlsx");
+		response.setHeader("Content-Disposition","attachment; filename="+stri);
 		
 		ByteArrayInputStream inputstream = AdminCompleteReportExcel.exportCustomerListToExcelFile(allDetails);
 		
 		IOUtils.copy(inputstream, response.getOutputStream());
 		
-		
-		/*
-		 * //--------------------------------------------------
-		 * 
-		 * DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy--HH:mm:ss");
-		 * LocalDateTime now = LocalDateTime.now(); String
-		 * appendingDate=dtf.format(now); System.out.println();
-		 * 
-		 * 
-		 * 
-		 * //---------------------------------------------------
-		 * 
-		 * File home = FileSystemView.getFileSystemView().getHomeDirectory(); String
-		 * path=home.getAbsolutePath(); String[]
-		 * list1=path.replaceAll(Pattern.quote("\\"),"\\\\").split("\\\\"); String
-		 * stri=""; for(String i :list1) { stri=stri+i+"/"; }
-		 * stri=stri+admins.get(0).getAname()+" Complete Report "+appendingDate+".xlsx";
-		 * System.out.println(stri);
-		 * 
-		 * 
-		 * 
-		 * //------------------------------------------------------
-		 */		
-		
-		
-		
+				
 	}
 	
 	@RequestMapping("/update1")
@@ -222,5 +225,48 @@ public class AdminMasterController {
 		
 
 	}
+	
+	
+	@RequestMapping("showDetailsExcel")
+	public void showDetailsExcel(HttpServletResponse response) throws IOException {
+		
+		   DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		   LocalDateTime now = LocalDateTime.now();
+		   String appendingDate=dtf.format(now);
+		   System.out.println();
+		
+        String stri=admins.get(0).getAname()+" Report"+appendingDate+".xlsx";
+		System.out.println(stri);
+	
+	response.setContentType("application/octet-stream");
+	response.setHeader("Content-Disposition","attachment; filename="+stri);
+	
+	ByteArrayInputStream inputstream= showDetailsExcel.exportCustomerListToExcelFile(showDetails1);
+	
+	IOUtils.copy(inputstream, response.getOutputStream());
+		
+	}
+	
+	
+	@RequestMapping("showDetails2Excel")
+	public void showDetails2Excel(HttpServletResponse response) throws IOException {
+		
+		   DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		   LocalDateTime now = LocalDateTime.now();
+		   String appendingDate=dtf.format(now);
+		   System.out.println();
+		
+        String stri=admins.get(0).getAname()+" Report"+appendingDate+".xlsx";
+		System.out.println(stri);
+	
+	response.setContentType("application/octet-stream");
+	response.setHeader("Content-Disposition","attachment; filename="+stri);
+	
+	ByteArrayInputStream inputstream= showDetails2Excel.exportCustomerListToExcelFile(showDetails2);
+	
+	IOUtils.copy(inputstream, response.getOutputStream());
+		
+	}
+	
 	
 }

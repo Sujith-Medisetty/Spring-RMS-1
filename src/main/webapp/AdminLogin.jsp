@@ -158,8 +158,9 @@ margin-top:3px;
              <select class="form-select  unique1" aria-label="Default select example" name="tellerid" required>
             <option selected disabled value="">Select Teller</option>
            <%      
- 
-           ArrayList<DropDownTellerList> dropDownTellerList=repo.getDropDownTellerList();
+          
+           String lid=(String)session.getAttribute("location");
+           ArrayList<DropDownTellerList> dropDownTellerList=repo.getDropDownTellerList(lid);
               for(DropDownTellerList i:dropDownTellerList){
            %>
            <option value=<%=i.getTid() %>><%=i.getTid()+" <--> "+i.getTname() %></option>

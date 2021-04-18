@@ -28,8 +28,9 @@ public class AdminMasterRepo {
     
 	/*------------------------------------getDropDownTellerList()--------------------------------------------------------------------------------------*/
     
-    public ArrayList<DropDownTellerList>  getDropDownTellerList() {
-    	List<Object[]> results= this.entityManager.createNativeQuery("select tid, tname, tpno from teller_master ")
+    public ArrayList<DropDownTellerList>  getDropDownTellerList(String lid) {
+    	List<Object[]> results= this.entityManager.createNativeQuery("select * from teller_master where location_lid=?;")
+    			                     .setParameter(1, lid)   
     			                     .getResultList();
     	
     	ArrayList<DropDownTellerList> responses = new ArrayList<DropDownTellerList>();
