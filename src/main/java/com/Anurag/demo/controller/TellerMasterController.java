@@ -42,6 +42,7 @@ public class TellerMasterController {
 	TellerAndLocationResponse GlobalTellerAndLocationDetails;
 	
 	ArrayList<Teller2Response> TellerReportExcel;
+	String tellid;
 	
 	@Autowired
 	TellerMasterDao dao;
@@ -64,7 +65,8 @@ public class TellerMasterController {
 	public ModelAndView TellerLogin(@RequestParam String tid,@RequestParam String tpass,HttpSession session) {
 		
 		if(dao.findByTeller(tid, tpass)>0) {
-
+ 
+			tellid=tid;
 			
 			TellerAndLocationResponse TellerAndLocationDetails=dao.getTellerAndLocationInfo(tid); 
 			ModelAndView mv=new ModelAndView("TellerLogin.jsp");
@@ -185,7 +187,7 @@ public class TellerMasterController {
 	public String Teller2(@RequestParam String date1,@RequestParam String date2,HttpSession session) {
 		
 		System.out.println(date1+"    "+date2);
-		ArrayList<Teller2Response> TellerReportDates=repo.getTeller2(date1,date2);
+		ArrayList<Teller2Response> TellerReportDates=repo.getTeller2(tellid,date1,date2);
 		TellerReportExcel=TellerReportDates;
 		
 		
