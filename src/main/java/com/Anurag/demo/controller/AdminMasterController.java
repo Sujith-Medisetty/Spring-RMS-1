@@ -129,9 +129,13 @@ public class AdminMasterController {
 			
 			details=repo.getAdminAnalysisDetails2(lid, tid);
 			
-		}else {
+		}else if(tid==null && date1!=null && date2!=null){
 			
 			details=repo.getAdminAnalysisDetails1(lid, date1, date2);
+			
+		}else {
+			
+			details=repo.getAdminAnalysisDetails4(lid);
 			
 		}
 		showDetails1=details;

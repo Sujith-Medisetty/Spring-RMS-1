@@ -333,7 +333,7 @@ public class AdminMasterRepo {
 	  List<Object[]> results=this.entityManager.createNativeQuery("select tid , array_to_string(array_agg(distinct tname),',') tname,cast(count(customers) as text) as customers, cast(round(sum(totalamount)) as text) as amount from  (select  array_to_string(array_agg(distinct t.tid),',') tid, array_to_string(array_agg(distinct t.tname),',') tname,array_to_string(array_agg(distinct c.cname),',') cname, cast(count(c.cid) as text) as customers,  array_to_string(array_agg(distinct t.tpno),',') tpno,((sum(j.jobprice)-((sum(j.jobprice)*cast(array_to_string(array_agg(distinct h.discount),',') as integer))/100))+(((sum(j.jobprice)-((sum(j.jobprice)*cast(array_to_string(array_agg(distinct h.discount),',') as integer))/100))*cast(array_to_string(array_agg(distinct h.gst),',') as integer))/100)) as totalamount, cast(array_to_string(array_agg(distinct l.lname),',') as text) lname, cast(array_to_string(array_agg(distinct l.lpno),',') as text) lpno, cast(array_to_string(array_agg(distinct c.date),',') as date) date from  customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where l.lid=? group by c.cid) as derived group by tid;")
 			                .setParameter(1, lid) 
 			  				.getResultList();
-	  
+	   
 	  ArrayList<TellerPerformance> responses = new ArrayList<TellerPerformance>();
 	  
 	  results.stream().forEach((record)->{
@@ -401,6 +401,27 @@ public class AdminMasterRepo {
 			                   .setParameter(3, java.sql.Date.valueOf(date2))
 			                   .setParameter(4, tid)
 			                   .getResultList();
+	  
+	  ArrayList<AdminAnalysisDetails> responses=new ArrayList<AdminAnalysisDetails>();
+	  
+	  results.stream().forEach((record)->{
+		  String tellerid=(String)record[0];
+		  String tname=(String)record[1];
+		  String tpno=(String)record[2];
+		  String customers=(String)record[3];
+		  String amount=(String)record[4];
+		  responses.add(new AdminAnalysisDetails(tellerid, tname, tpno, customers, amount));
+	  });
+	  
+	  
+	  return responses;
+  }
+  
+  public ArrayList<AdminAnalysisDetails> getAdminAnalysisDetails4(String lid) {
+	  
+	  List<Object[]> results=this.entityManager.createNativeQuery("select tid , array_to_string(array_agg(distinct tname),',') tname,cast(count(customers) as text) as customers, cast(round(sum(totalamount)) as text) as amount from  (select  array_to_string(array_agg(distinct t.tid),',') tid, array_to_string(array_agg(distinct t.tname),',') tname,array_to_string(array_agg(distinct c.cname),',') cname, cast(count(c.cid) as text) as customers,  array_to_string(array_agg(distinct t.tpno),',') tpno,((sum(j.jobprice)-((sum(j.jobprice)*cast(array_to_string(array_agg(distinct h.discount),',') as integer))/100))+(((sum(j.jobprice)-((sum(j.jobprice)*cast(array_to_string(array_agg(distinct h.discount),',') as integer))/100))*cast(array_to_string(array_agg(distinct h.gst),',') as integer))/100)) as totalamount, cast(array_to_string(array_agg(distinct l.lname),',') as text) lname, cast(array_to_string(array_agg(distinct l.lpno),',') as text) lpno, cast(array_to_string(array_agg(distinct c.date),',') as date) date from  customer_master c inner join history_master h on c.cid = h.customer_cid inner join job_price j on h.job_jobid = j.jobid inner join teller_master t on t.tid=c.teller_tid inner join location_master l on l.lid=t.location_lid where l.lid=? group by c.cid) as derived group by tid;")
+			                .setParameter(1, lid) 
+			  				.getResultList();
 	  
 	  ArrayList<AdminAnalysisDetails> responses=new ArrayList<AdminAnalysisDetails>();
 	  
