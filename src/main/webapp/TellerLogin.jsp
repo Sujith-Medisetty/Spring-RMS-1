@@ -188,7 +188,7 @@ return false;
 if(pno.trim()==""){
 cpno.innerHTML="No Blank Values Allowed";
 return false;
-}else if(/^[1-9][0-9]{9}/.test(pno.trim())){
+}else if(/^[1-9][0-9]{9}/.test(pno.trim()) && pno.length==10){
 cpno.innerHTML="";
 }else{
 cpno.innerHTML="Invalid Number";
@@ -503,6 +503,55 @@ return true;
     </div>
        
 
+       <script type="text/javascript">
+       
+      var date11=new Date();
+      var month=date11.getMonth()+1;
+      var date12=date11.getDate();
+      month=month+"";
+      date12=date12+"";
+      while(month.length < 2){
+        month = "0" + month;
+      }
+      while(date12.length < 2){
+        date11 = "0" + date11;
+      }
+      console.log(month);
+      var finalDate=date11.getFullYear()+'-'+(month)+'-'+date12;
+       console.log(finalDate);
+
+       
+       function validate2(){
+       
+       console.log("entered");
+              
+       var date1=document.getElementById("date1").value;
+       var date2=document.getElementById("date2").value;
+       console.log(date1+"  "+date2);
+
+       var displayVal=document.getElementById("displayVal");
+       
+       var x = new Date(date1);
+       var y = new Date(date2);
+       var z = new Date(finalDate);
+
+  
+       if(x>y){
+       displayVal.innerHTML="From Date cannot be greater than To Date";
+       return false;
+       }else if(x>z || y>z){
+       displayVal.innerHTML="From Date or To Date cannot be greater than Today ";
+       return false;
+       }else{
+       displayVal.innerHTML="";
+       }
+       
+
+
+       return true;
+       }
+       
+       </script>
        
        
        <!-- ---------------------------- -->  
