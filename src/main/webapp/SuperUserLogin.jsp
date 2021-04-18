@@ -844,7 +844,7 @@ $('.yes').toggle();
     
 } );
       </script>
-<!--              <script type="text/javascript">
+             <script type="text/javascript">
        
       var date11=new Date();
       var month=date11.getMonth()+1;
@@ -924,6 +924,6 @@ $('.yes').toggle();
        return true;
        }
        
-       </script> -->
+       </script>
 </body>
 </html>
