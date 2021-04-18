@@ -89,10 +89,14 @@ box-shadow: 5px 5px 25px lightgrey;
         </div>
         </form>
  </div>
- <div class="col-md-3">
+ <div class="col-md-2">
          <button class="btn btn-primary" onClick="printPage('printthis')" style="text-decoration:none; cursor: pointer;font-weight: bolder;">Print</button>
  </div>
-  <div class="col-md-3"></div>
+  <div class="col-md-2">
+   <form action="showDetailsExcel">
+         <button type="submit" id="ExcelSubmit" class="btn btn-primary"  style="text-decoration:none; cursor: pointer;font-weight: bolder;">Generate Excel Sheet</button>
+ </form>
+  </div>
  
  </div>
  
