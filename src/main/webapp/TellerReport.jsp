@@ -156,11 +156,9 @@ margin-top:5px;
  <div class="col-md-2">
          <button class="btn btn-primary" onClick="printPage('printthis')" style="text-decoration:none; cursor: pointer;font-weight: bolder;">Print</button>
  </div>
-   <div class="col-md-2">
  <form action="TellerReportExcel">
          <button type="submit" id="ExcelSubmit" class="btn btn-primary"  style="text-decoration:none; cursor: pointer;font-weight: bolder;">Generate Excel Sheet</button>
  </form>
- </div>
 
   <div class="col-md-3"></div>
  
