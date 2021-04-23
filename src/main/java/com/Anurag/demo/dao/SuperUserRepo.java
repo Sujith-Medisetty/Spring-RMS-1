@@ -58,7 +58,7 @@ public class SuperUserRepo {
 		/*------------------------------------getDropDownTellerList()--------------------------------------------------------------------------------------*/
     
     public ArrayList<DropDownTellerList>  getDropDownTellerList() {
-    	List<Object[]> results= this.entityManager.createNativeQuery("select tid, tname, tpno from teller_master ")
+    	List<Object[]> results= this.entityManager.createNativeQuery("select tid, tname, tpno from teller_master order by tid")
     			                     .getResultList();
     	
     	ArrayList<DropDownTellerList> responses = new ArrayList<DropDownTellerList>();
@@ -77,7 +77,7 @@ public class SuperUserRepo {
     
     public ArrayList<DropDownAdminList> getDropDownAdminList() {
     	
-    	List<Object[]> results=this.entityManager.createNativeQuery("select aid, aname, apass, apno, location_lid from admin_master")
+    	List<Object[]> results=this.entityManager.createNativeQuery("select aid, aname, apass, apno, location_lid from admin_master oeder by aid")
     			                    .getResultList();
     	
     	ArrayList<DropDownAdminList> responses=new ArrayList<DropDownAdminList>();
@@ -477,7 +477,7 @@ public class SuperUserRepo {
     
     public ArrayList<SuperUserDetails> getSuperUserDetails() {
         
-    	List<Object[]> results=entityManager.createNativeQuery("select sid,sname,spno,spass from super_user")
+    	List<Object[]> results=entityManager.createNativeQuery("select sid,sname,spno,spass from super_user order by sid")
     	                                .getResultList();
     	
           ArrayList<SuperUserDetails> responses = new ArrayList<SuperUserDetails>();
