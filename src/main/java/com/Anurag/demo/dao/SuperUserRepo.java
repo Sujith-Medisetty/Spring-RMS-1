@@ -99,7 +99,7 @@ public class SuperUserRepo {
     
     public ArrayList<TellerAndLocationResponse> getTellerAndLocation() {
     	
-    	List<Object[]> results=this.entityManager.createNativeQuery("select t.tid,t.tname,t.tpno,l.lid,l.lname,l.lpno from location_master l join teller_master t on t.location_lid=l.lid;")
+    	List<Object[]> results=this.entityManager.createNativeQuery("select t.tid,t.tname,t.tpno,l.lid,l.lname,l.lpno from location_master l join teller_master t on t.location_lid=l.lid order by t.tid;")
                 .getResultList();
  
       ArrayList<TellerAndLocationResponse> responses=new ArrayList<TellerAndLocationResponse>();
