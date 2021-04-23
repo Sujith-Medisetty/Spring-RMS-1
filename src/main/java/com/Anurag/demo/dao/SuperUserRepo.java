@@ -77,7 +77,7 @@ public class SuperUserRepo {
     
     public ArrayList<DropDownAdminList> getDropDownAdminList() {
     	
-    	List<Object[]> results=this.entityManager.createNativeQuery("select aid, aname, apass, apno, location_lid from admin_master oeder by aid")
+    	List<Object[]> results=this.entityManager.createNativeQuery("select aid, aname, apass, apno, location_lid from admin_master order by aid")
     			                    .getResultList();
     	
     	ArrayList<DropDownAdminList> responses=new ArrayList<DropDownAdminList>();
@@ -133,7 +133,7 @@ public class SuperUserRepo {
 		/*------------------------------------getLocationList()--------------------------------------------------------------------------------------*/
     
     public ArrayList<LocationResponse>  getLocationList() {
-    	List<Object[]> results= this.entityManager.createNativeQuery("select lid, lname, lpno from location_master")
+    	List<Object[]> results= this.entityManager.createNativeQuery("select lid, lname, lpno from location_master order by lname")
     			                   .getResultList();
     	
     	ArrayList<LocationResponse> responses = new ArrayList<LocationResponse>();
